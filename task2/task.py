@@ -17,29 +17,31 @@ class Homework(Trie):
         return len(matching_words)
 
     def has_prefix(self, prefix) -> bool:
-        pass
+        if not isinstance(prefix, str) or not prefix:
+            raise TypeError(
+                f"Illegal argument for has_prefix: prefix = {prefix} must be a non-empty string"
+            )
+        current = self.root
+        for char in prefix:
+            if char not in current.children:
+                return False
+            current = current.children[char]
+        return True
 
 
 if __name__ == "__main__":
     trie = Homework()
-    words = ["apple", "application", "banana", "cat", "app", "cocoapp", "dodge"]
+    words = ["apple", "application", "banana", "cat", "app", "cocoapp"]
     for i, word in enumerate(words):
         trie.put(word, i)
 
-    # Перевірка кількості слів, що закінчуються на заданий суфікс
+    assert trie.count_words_with_suffix("e") == 1  # apple
+    assert trie.count_words_with_suffix("ion") == 1  # application
+    assert trie.count_words_with_suffix("a") == 1  # banana
+    assert trie.count_words_with_suffix("at") == 1  # cat
 
-    print(trie.get("apple"))  # Output: 1
-    print(trie.get("app"))  # Output: 2
-
-    print(trie.count_words_with_suffix("app"))  # Output: 3
-
-    # assert trie.count_words_with_suffix("e") == 1  # apple
-    # assert trie.count_words_with_suffix("ion") == 1  # application
-    # assert trie.count_words_with_suffix("a") == 1  # banana
-    # assert trie.count_words_with_suffix("at") == 1  # cat
-
-    # # Перевірка наявності префікса
-    # assert trie.has_prefix("app") == True  # apple, application
-    # assert trie.has_prefix("bat") == False
-    # assert trie.has_prefix("ban") == True  # banana
-    # assert trie.has_prefix("ca") == True  # cat
+    # Перевірка наявності префікса
+    assert trie.has_prefix("app") == True  # apple, application
+    assert trie.has_prefix("bat") == False
+    assert trie.has_prefix("ban") == True  # banana
+    assert trie.has_prefix("ca") == True  # cat
